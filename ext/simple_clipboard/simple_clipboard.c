@@ -28,6 +28,17 @@ VALUE get_text(VALUE _self) {
     return result;
 }
 
+VALUE get_upper_text(VALUE _self) {
+    VALUE result = Qnil;
+    char *text = clipboard_text(cb);
+    if (NULL != text) {
+        for(int i;i < strlen(text);i++) text[i] = toupper(text[i]);
+        result = rb_str_new(text, strlen(text));
+        free(text);
+    }
+    return result;
+}
+
 void Init_simple_clipboard() {
     cb = clipboard_new(NULL);
     if (NULL == cb) {
@@ -36,4 +47,5 @@ void Init_simple_clipboard() {
     VALUE mod = rb_define_module("SimpleClipboard");
     rb_define_module_function(mod, "get_text", get_text, 0);
     rb_define_module_function(mod, "set_text", set_text, 1);
+    rb_define_module_function(mod, "get_upper_text", get_upper_text, 0);
 }
